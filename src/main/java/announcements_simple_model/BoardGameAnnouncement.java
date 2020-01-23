@@ -1,5 +1,9 @@
 package announcements_simple_model;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+@Getter @EqualsAndHashCode(callSuper=true)
 public class BoardGameAnnouncement extends Announcement {
 	// class representing board games announcements
 
@@ -16,26 +20,6 @@ public class BoardGameAnnouncement extends Announcement {
 		this.maxNumberOfPlayers = maxNumberOfPlayers;
 	}
 
-	public BoardGameType getType() {
-		return type;
-	}
-
-	public int getMinPlayerAge() {
-		return minPlayerAge;
-	}
-
-	public int getMaxPlayerAge() {
-		return maxPlayerAge;
-	}
-
-	public int getMinNumberOfPlayers() {
-		return minNumberOfPlayers;
-	}
-
-	public int getMaxNumberOfPlayers() {
-		return maxNumberOfPlayers;
-	}
-
 	@Override
 	public String toString() {
 		return "Ogłoszenie nr: " + getAnnouncementId() + " [" + getTitle() + ", " + getDescription()
@@ -43,40 +27,6 @@ public class BoardGameAnnouncement extends Announcement {
 				+ ", liczba graczy: " + minNumberOfPlayers + "-" + maxNumberOfPlayers + "], data wystawienia: "
 				+ getDayOfStart() + ", data zakończenia: " + getDayOfEnd() + ", cena: " + getPrice()
 				+ " PLN, od sprzedawcy = " + getSeller();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + maxNumberOfPlayers;
-		result = prime * result + maxPlayerAge;
-		result = prime * result + minNumberOfPlayers;
-		result = prime * result + minPlayerAge;
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BoardGameAnnouncement other = (BoardGameAnnouncement) obj;
-		if (maxNumberOfPlayers != other.maxNumberOfPlayers)
-			return false;
-		if (maxPlayerAge != other.maxPlayerAge)
-			return false;
-		if (minNumberOfPlayers != other.minNumberOfPlayers)
-			return false;
-		if (minPlayerAge != other.minPlayerAge)
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
 	}
 
 }

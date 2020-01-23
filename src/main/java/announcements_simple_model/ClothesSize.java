@@ -1,5 +1,8 @@
 package announcements_simple_model;
 
+import lombok.Getter;
+
+@Getter
 public enum ClothesSize {
 	// enum class representing clothes sizes
 
@@ -30,14 +33,6 @@ public enum ClothesSize {
 			System.out.println("wzrost: 185cm, szerokość: 110cm");
 			break;
 		}
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public int getChestWidth() {
-		return chestWidth;
 	}
 
 }
