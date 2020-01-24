@@ -2,9 +2,14 @@ package announcements_simple_model;
 
 import lombok.Getter;
 
+/**
+ * Enum class representing clothes sizes.
+ * 
+ * @author Aga
+ *
+ */
 @Getter
 public enum ClothesSize {
-	// enum class representing clothes sizes
 
 	S(165, 86), M(170, 92), L(175, 98), XL(180, 104), XXL(185, 110);
 

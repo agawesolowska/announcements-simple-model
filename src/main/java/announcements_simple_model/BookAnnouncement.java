@@ -3,14 +3,23 @@ package announcements_simple_model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter @EqualsAndHashCode(callSuper=true)
+/**
+ * Class representing books announcements.
+ * 
+ * @author Aga
+ *
+ */
+@Getter
+@EqualsAndHashCode(callSuper = true)
 public class BookAnnouncement extends Announcement {
-	// class representing books announcements
 
 	private String author;
 	private BookCategory category;
 	private int publicationYear;
 
+	/**
+	 * This constructor creates an object based on parameters given by user.
+	 */
 	public BookAnnouncement(String title, String description, String price, Seller seller, String author,
 			BookCategory category, int publicationYear) {
 		super(title, description, price, seller);

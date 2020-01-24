@@ -5,6 +5,12 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+/**
+ * Unit tests of class representing a database.
+ * 
+ * @author Aga
+ *
+ */
 public class DatabaseTest {
 	// definitely TODO
 

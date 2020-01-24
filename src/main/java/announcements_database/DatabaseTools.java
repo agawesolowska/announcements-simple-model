@@ -6,9 +6,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Utility class for database handling.
+ * 
+ * @author Aga
+ *
+ */
 public class DatabaseTools {
-	// utility class
 
+	/**
+	 * This method selects a maximum seller ID in the database and is used to create
+	 * a new object of a seller.
+	 * 
+	 * @see Class 'Seller' in package announcements_simple_model.
+	 * @return A maximum ID from sellers table.
+	 */
 	public static Integer getMaxIdOfSellers() {
 		Connection connection;
 		PreparedStatement pstmt;
@@ -28,6 +40,13 @@ public class DatabaseTools {
 		return null;
 	}
 
+	/**
+	 * This method selects a maximum announcement ID in the database and is used to
+	 * create a new object of an announcement.
+	 * 
+	 * @see Class 'Announcement' in package announcements_simple_model.
+	 * @return A maximum ID from announcements table.
+	 */
 	public static Integer getMaxIdOfAnnouncements() {
 		Connection connection;
 		PreparedStatement pstmt;

@@ -10,8 +10,13 @@ import org.junit.Test;
 
 import announcements_database.DatabaseTools;
 
+/**
+ * Unit tests of class representing a simple model of announcements.
+ * 
+ * @author Aga
+ *
+ */
 public class AnnouncementTest {
-	// unit tests of class representing a simple model of announcements
 
 	private static Seller seller;
 	private static Announcement announcement;

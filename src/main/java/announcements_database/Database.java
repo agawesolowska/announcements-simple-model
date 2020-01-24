@@ -12,8 +12,13 @@ import announcements_simple_model.BookAnnouncement;
 import announcements_simple_model.ClothesAnnouncement;
 import announcements_simple_model.Seller;
 
+/**
+ * Class representing an announcements database.
+ * 
+ * @author Aga
+ *
+ */
 public class Database {
-	// class representing an announcements database
 
 	private Connection connection;
 	private Statement stmt;
