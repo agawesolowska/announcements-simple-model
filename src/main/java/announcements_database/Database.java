@@ -1,8 +1,10 @@
 package announcements_database;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -20,13 +22,15 @@ import announcements_simple_model.Seller;
  */
 public class Database {
 
+	private String url = "jdbc:sqlite:announcements-web-page.db";
+	
 	private Connection connection;
 	private Statement stmt;
 	private PreparedStatement pstmt;
 
 	public Database() {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			stmt = connection.createStatement();
 			stmt.executeUpdate(
 					"CREATE TABLE IF NOT EXISTS sellers (seller_id INTEGER PRIMARY KEY, nickname TEXT, phone_number TEXT, email_address TEXT);");
@@ -48,7 +52,7 @@ public class Database {
 
 	public void addSeller(Seller seller) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection.prepareStatement("INSERT INTO sellers VALUES (?, ?, ?, ?);");
 			pstmt.setInt(1, seller.getSellerId());
 			pstmt.setString(2, seller.getNickname());
@@ -66,7 +70,7 @@ public class Database {
 
 	public void deleteSeller(String seller_id) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection.prepareStatement("DELETE FROM sellers WHERE seller_id = ?;");
 			pstmt.setString(1, seller_id);
 			pstmt.executeUpdate();
@@ -78,10 +82,32 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public void findSeller(String nickname) {
+		try {
+			connection = DriverManager.getConnection(url);
+			pstmt = connection.prepareStatement("SELECT * FROM sellers WHERE nickname = ?;");
+			pstmt.setString(1, nickname);
+			ResultSet rs = pstmt.executeQuery();
+			while(rs.next()) {
+				int sellerId = rs.getInt(1);
+				String nickName = rs.getString("nickname");
+				String phoneNumber = rs.getString("phone_number");
+				String emailAddress = rs.getString("email_address");
+				System.out.printf("Wyszukałeś użytkownika - id:%d %s %s %s", sellerId, nickName, phoneNumber, emailAddress);
+			}
+			rs.close();
+			pstmt.close();
+			connection.close();
+		} catch (SQLException e) {
+			System.err.println("Nie udało sie wyszukać sprzedawcy.");
+			e.printStackTrace();
+		}
+	}
 
 	public void addBoardGameAnnouncement(BoardGameAnnouncement boardGameAnnouncement) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection.prepareStatement(
 					"INSERT INTO board_games_announcements VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 			pstmt.setInt(1, boardGameAnnouncement.getAnnouncementId());
@@ -111,7 +137,7 @@ public class Database {
 
 	public void addBookAnnouncement(BookAnnouncement bookAnnouncement) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection
 					.prepareStatement("INSERT INTO books_announcements VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 			pstmt.setInt(1, bookAnnouncement.getAnnouncementId());
@@ -139,7 +165,7 @@ public class Database {
 
 	public void addClothesAnnouncement(ClothesAnnouncement clothesAnnouncement) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection
 					.prepareStatement("INSERT INTO clothes_announcements VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 			pstmt.setInt(1, clothesAnnouncement.getAnnouncementId());
@@ -165,21 +191,22 @@ public class Database {
 		}
 	}
 
+	private String chooseTypeOfAnnouncement(AnnouncementType announcementType) {
+		switch (announcementType) {
+		case board_games:
+			return "board_games_announcements";
+		case books:
+			return "books_announcements";
+		case clothes:
+			return "clothes_announcements";
+		}
+		return null;
+	}
+
 	public void deleteAnnouncement(AnnouncementType announcementType, String announcement_id) {
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
-			String typeOfAnnouncement = null;
-			switch (announcementType) {
-			case board_games:
-				typeOfAnnouncement = "board_games_announcements";
-				break;
-			case books:
-				typeOfAnnouncement = "books_announcements";
-				break;
-			case clothes:
-				typeOfAnnouncement = "clothes_announcements";
-				break;
-			}
+			connection = DriverManager.getConnection(url);
+			String typeOfAnnouncement = chooseTypeOfAnnouncement(announcementType);
 			pstmt = connection.prepareStatement("DELETE FROM " + typeOfAnnouncement + " WHERE announcement_id = ?;");
 			pstmt.setString(1, announcement_id);
 			pstmt.executeUpdate();
@@ -191,6 +218,31 @@ public class Database {
 			System.out.println("Usunąłeś ogłoszenie z bazy danych.");
 		} catch (SQLException e) {
 			System.err.println("Nie udało sie usunąć ogłoszenia.");
+			e.printStackTrace();
+		}
+	}
+
+	public void findAnnouncement(AnnouncementType announcementType, String lowerPrice, String higherPrice) {
+		try {
+			connection = DriverManager.getConnection(url);
+			String typeOfAnnouncement = chooseTypeOfAnnouncement(announcementType);
+			pstmt = connection.prepareStatement("SELECT * FROM " + typeOfAnnouncement + " WHERE price BETWEEN ? AND ? ORDER BY price DESC;");
+			pstmt.setString(1, lowerPrice);
+			pstmt.setString(2, higherPrice);
+			ResultSet rs = pstmt.executeQuery();
+			System.out.println("Wyszukałeś nastepujące ogłoszenia:");
+			while(rs.next()) {
+				int announcementId = rs.getInt(1);
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				BigDecimal price = rs.getBigDecimal("price");
+				System.out.printf("> id:%d %s %s %.2f\n", announcementId, title, description, price);
+			}
+			rs.close();
+			pstmt.close();
+			connection.close();
+		} catch (SQLException e) {
+			System.err.println("Nie udało sie wyszukać ogłoszeń.");
 			e.printStackTrace();
 		}
 	}

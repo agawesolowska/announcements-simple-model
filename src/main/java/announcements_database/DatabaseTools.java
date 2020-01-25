@@ -14,6 +14,8 @@ import java.sql.SQLException;
  */
 public class DatabaseTools {
 
+	private static String url = "jdbc:sqlite:announcements-web-page.db";
+	
 	/**
 	 * This method selects a maximum seller ID in the database and is used to create
 	 * a new object of a seller.
@@ -25,7 +27,7 @@ public class DatabaseTools {
 		Connection connection;
 		PreparedStatement pstmt;
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection.prepareStatement("SELECT max(seller_id) FROM sellers;");
 			ResultSet rs = pstmt.executeQuery();
 			Integer queryResult = rs.getInt(1);
@@ -51,7 +53,7 @@ public class DatabaseTools {
 		Connection connection;
 		PreparedStatement pstmt;
 		try {
-			connection = DriverManager.getConnection("jdbc:sqlite:announcements-web-page.db");
+			connection = DriverManager.getConnection(url);
 			pstmt = connection.prepareStatement("SELECT max(id) FROM announcements_ids;");
 			ResultSet rs = pstmt.executeQuery();
 			Integer queryResult = rs.getInt(1);
